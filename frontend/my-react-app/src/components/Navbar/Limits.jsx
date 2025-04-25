@@ -1,29 +1,31 @@
 import { useState } from "react";
 import { TbSunElectricity } from "react-icons/tb";
 
-const Limits =()=>{
-    const [monthlyLimit, setMonthlyLimit] = useState("");
-    const [dailyLimit, setDailyLimit] = useState("");
-    const [peakHourLimit, setPeakHourLimit] = useState("");
-    const [autoCutoff, setAutoCutoff] = useState(false);
+    const Limits =()=>{
+      const [monthlyLimit, setMonthlyLimit] = useState("");
+      const [dailyLimit, setDailyLimit] = useState("");
+      const [peakHourLimit, setPeakHourLimit] = useState("");
+      const [autoCutoff, setAutoCutoff] = useState(false);
   
-    const handleSave = () => {
-      console.log("Limits Saved:", {
-        monthlyLimit,
-        dailyLimit,
-        peakHourLimit,
-        autoCutoff,
-      });
-      alert("Limits saved successfully!");
-    };
-  
-    const handleReset = () => {
-      setMonthlyLimit("");
-      setDailyLimit("");
-      setPeakHourLimit("");
-      setAutoCutoff(false);
-      alert("Limits reset successfully!");
-    };
+      const [showToast, setShowToast] = useState(false);
+      const [toastMessage, setToastMessage] = useState("");
+      
+      const handleSave = () => {
+        setToastMessage("Limits saved successfully!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      };
+      
+      const handleReset = () => {
+        setMonthlyLimit("");
+        setDailyLimit("");
+        setPeakHourLimit("");
+        setAutoCutoff(false);
+        setToastMessage("Limits reset successfully!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      };
+      
 return (
      <div className="set-limits-section">
             <TbSunElectricity className="limit-icon" />
@@ -75,7 +77,12 @@ return (
                  <button className="reset-btn" onClick={handleReset}>
                    Reset
                  </button>
-               </div>          
+               </div>  
+               {showToast && (
+                 <div className="glass-toast">
+                 {toastMessage}
+                 </div>
+)}    
      </div>
 )}
 export default Limits;

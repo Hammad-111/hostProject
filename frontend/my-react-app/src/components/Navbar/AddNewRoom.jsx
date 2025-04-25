@@ -8,49 +8,49 @@ import PropTypes from "prop-types";
 const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, handleToggle }) => {
   return (
     <div className="devices-section">
-      <h2>{activeRoom} - Control Your Devices</h2>
+      <h2 style={{margin: '10px', position: 'absolute',top: '10px'}}>{activeRoom} - Control Your Devices</h2>
       <div className="devices-container">
         {/* Device Cards */}
         <div className="device-list">
           <div className="device-card">
             <PiFanBold className="device" />
             <h3>Smart Fan</h3>
-            <p>Turn on/off and adjust speed remotely.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart Fan")}>Add</button>
           </div>
 
           <div className="device-card">
             <FaRegLightbulb className="device" />
             <h3>Smart Light</h3>
-            <p>Dim or brighten your lights from anywhere.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Add</button>
           </div>
 
           <div className="device-card">
             <MdOutlineAir className="device" />
             <h3>Air Conditioner</h3>
-            <p>Control temperature and fan mode from anywhere.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Air Conditioner")}>Add</button>
           </div>
 
           <div className="device-card">
             <MdOutlineSecurity className="device" />
             <h3>Security Camera</h3>
-            <p>Live video streaming and motion detection alerts.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Security Camera")}>Add</button>
           </div>
 
           <div className="device-card">
             <BiTv className="device" />
             <h3>Smart TV</h3>
-            <p>Turn appliances on/off.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart TV")}>Add</button>
           </div>
 
           <div className="device-card">
             <CgSmartHomeRefrigerator className="device" />
             <h3>Refrigerator</h3>
-            <p>Schedule & optimize usage.</p>
+            <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Refrigerator")}>Add</button>
           </div>
         </div>

@@ -99,7 +99,7 @@ useEffect(() => {
           {rooms.map((room, index) => (
             <div key={index} className="room-item">
               <button
-                className="room-btn"
+                className="room-btn" 
                 onClick={() => {
                   setActiveRoom(room);
                   setActiveSection("devices");
@@ -107,8 +107,8 @@ useEffect(() => {
               >
                 <MdMeetingRoom /> {room}
               </button>
-              <button className="delete-btn" onClick={() => deleteRoom(room)}>
-                ❌
+              <button onClick={() => deleteRoom(room)}>
+                Delete
               </button>
             </div>
           ))}
