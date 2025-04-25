@@ -1,0 +1,89 @@
+.container{
+    position: relative;
+    width: 380px;
+    height: 300px;
+    background:  transparent;
+    border: 2px solid rgba(214, 11, 11, 0.1);
+    backdrop-filter: blur(35px);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    transition: transform 0.5s ease;
+}
+.container:hover{
+    transform: translateY(-10px);
+}
+.form-box h1 {
+    font-size: 23px;
+    color:#fff;
+    margin-bottom: 20px;
+    position: relative;
+    text-align: center;
+    margin: 10px;
+    transition: transform 0.5s ease;
+}
+h1:hover{
+    transform: translateY(-5px);
+}
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .1);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input:focus {
+    border-color: #4ca1af;
+}
+
+.input-box .icons {
+   position: absolute;
+   right: 17px;
+   bottom: 19px;
+   color: #4ca1af;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background: #4ca1af;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 700;
+}
+
+button:hover {
+    background: #2c3e50;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.success-message {
+    color: green;
+}
+
+.error-message {
+    color: red;
+    font-weight: 550;
+    text-align: center;
+}

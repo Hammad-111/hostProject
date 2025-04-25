@@ -1,0 +1,113 @@
+/* HomeSetupScreens.css */
+
+/* Container Glass Effect */
+.home-setup-container {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 750px;
+  margin: 4rem auto;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: transform 0.5s ease;
+}
+.wrapper:hover{
+    transform: translateY(-10px);
+}
+
+/* Headings */
+.home-setup-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.home-setup-description {
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #e0e0e0;
+}
+
+/* Input */
+.home-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.home-input-label {
+  font-weight: bold;
+  color: #f0f0f0;
+}
+
+.home-input-field {
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+}
+.home-input-field::placeholder {
+  color: #140202;
+  opacity: 0.8;
+}
+/* Buttons */
+.add-home-button,
+.next-button {
+  padding: 0.8rem;
+  margin-top: 0.6rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.add-home-button {
+  background-color: #2563eb; /* blue */
+  color: white;
+}
+
+.add-home-button:hover {
+  background-color: #1d4ed8;
+}
+
+.next-button {
+  background-color: #16a34a; /* green */
+  color: white;
+}
+
+.next-button:hover {
+  background-color: #15803d;
+}
+
+/* List of added homes */
+.added-homes {
+  margin-top: 1.5rem;
+}
+
+.added-homes h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.added-homes ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.added-homes li {
+  font-size: 1rem;
+  color: #f8f8f8;
+  margin-bottom: 0.3rem;
+}
