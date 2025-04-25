@@ -5,6 +5,8 @@ import "./HomeSetupScreens.css"; // Import your CSS file for styling
 const HomeSetupScreen = () => {
   const [homeName, setHomeName] = useState("");
   const [homes, setHomes] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+
   const navigate = useNavigate();
 
   const handleAddHome = () => {
@@ -16,13 +18,10 @@ const HomeSetupScreen = () => {
 
   const handleNext = () => {
     if (homes.length === 0) {
-      alert("Please add at least one home before proceeding.");
+      setShowPopup(true);
       return;
     }
-
-    // Optionally: save to localStorage or global state here
-    // localStorage.setItem("homes", JSON.stringify(homes));
-    navigate("/home"); // navigate to your home/dashboard page
+    navigate("/home"); 
   };
 
   return (
@@ -61,15 +60,23 @@ const HomeSetupScreen = () => {
              ))}
            </ul>
          </div>
-  )}
-
-  <button
-    onClick={handleNext}
-    className="next-button"
-  >
-    Next
-  </button>
-</div>
+         )}
+ 
+         <button
+           onClick={handleNext}
+           className="next-button"
+         >
+           Next
+         </button>
+         {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-box">
+              <p>Please add at least one home before proceeding.</p>
+              <button onClick={() => setShowPopup(false)}>OK</button>
+            </div>
+          </div>
+        )}
+       </div>
   );
 };
 

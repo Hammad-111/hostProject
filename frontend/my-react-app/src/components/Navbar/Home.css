@@ -345,18 +345,21 @@ input::placeholder {
   left: 310px; /* Sidebar width ke hisaab se adjust karo */
   right: 2px; /* Puri right side tak spread hoga */
   background: rgba(0, 0, 0, 0.3);
-  padding: 20px;
   backdrop-filter: blur(10px);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 910px; /* Slightly Wider */
+  max-height: 580px;
 }
 
 .graph-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 columns layout */
-  gap: 20px;
-  width: 100%;
+  gap: 10px;
+  width: 95%;
+  
 }
 
 .stats-icon {
