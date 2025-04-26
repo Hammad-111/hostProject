@@ -20,7 +20,7 @@ export const ForgotPassword = () => {
         }
 
         try {
-            await axios.post("http://localhost:3001/forgot-password", { email });
+            await axios.post("http://localhost:3001/password", { email });
             setMessage("Password reset link has been sent to your email.");
         } catch (err) {
             console.error(err);
