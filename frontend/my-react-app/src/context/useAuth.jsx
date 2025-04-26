@@ -1,7 +1,19 @@
-// filepath: f:\8th Smester\project fyp\frontend\my-react-app\src\context\useAuth.js
-import { useContext } from "react";
-import AuthContext from "./AuthContext";
+import { Route, Navigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import PropTypes from "prop-types";
 
-const useAuth = () => useContext(AuthContext);
+const PrivateRoute = ({ element: Component, ...rest }) => {
+  const { isAuthenticated } = useAuth();  // Auth state ko check karna
 
-export default useAuth;
+  return (
+    <Route 
+      {...rest} 
+      element={isAuthenticated ? Component : <Navigate to="/login" />}  // Agar user logged in hai to Component dikhayenge, nahi to login page par redirect karenge
+    />
+  );
+};
+PrivateRoute.propTypes = {
+  element: PropTypes.element.isRequired,
+};
+
+export default PrivateRoute;

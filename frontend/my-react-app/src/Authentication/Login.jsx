@@ -3,16 +3,28 @@ import { FaLock } from "react-icons/fa";
 import './Login.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 
 export const Login = () => {
-    
+
    const [email, setEmail] = useState(""); 
    const [password, setPassword] = useState("");
    const [message, setMessage] = useState("");
+   const [rememberMe, setRememberMe] = useState(false);
    const navigate = useNavigate();
 
+   // Check localStorage for saved credentials on component mount
+   useEffect(() => {
+      const savedEmail = localStorage.getItem("email");
+      const savedPassword = localStorage.getItem("password");
+      const savedRememberMe = localStorage.getItem("rememberMe");
+
+      if (savedRememberMe === "true") {
+         setEmail(savedEmail);
+         setPassword(savedPassword);
+         setRememberMe(true);
+      }
+   }, []);
 
    const handleSubmit = (e) => {
      e.preventDefault();
@@ -24,6 +36,17 @@ export const Login = () => {
       if (result.data.message === "Success") { 
         setMessage("Login Successful! Redirecting...");
         setTimeout(() => navigate("/homeSetup"), 2000);   
+
+        // If "Remember Me" is checked, save email and password to localStorage
+        if (rememberMe) {
+          localStorage.setItem("email", email);
+          localStorage.setItem("password", password);
+          localStorage.setItem("rememberMe", true);
+        } else {
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+          localStorage.removeItem("rememberMe");
+        }
       } else {
         setMessage(result.data.message);
       }
@@ -32,6 +55,10 @@ export const Login = () => {
       console.log(err);
       setMessage("Login Failed! Try again.");
     });
+   };
+
+   const handleRememberMeChange = (e) => {
+      setRememberMe(e.target.checked);
    };
 
   return (
@@ -58,10 +85,14 @@ export const Login = () => {
                  <FaLock className="icon"/>
               </div>
               <div className="remember-forgot">
-                <label><input 
-                   type="checkbox" />
-                   Remember me</label>
-                 <a href="Login/Forgot">Forgot Password?</a>
+                <label>
+                   <input 
+                     type="checkbox" 
+                     checked={rememberMe} 
+                     onChange={handleRememberMeChange} />
+                   Remember me
+                </label>
+                <a href="Login/Forgot">Forgot Password?</a>
               </div>
               <button type="submit">Login</button>
               <div className="register-link">

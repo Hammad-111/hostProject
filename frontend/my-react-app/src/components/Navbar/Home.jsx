@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { MdOutlineAddHome, MdMeetingRoom } from "react-icons/md";
 import { CiLogin } from "react-icons/ci";
@@ -61,31 +61,45 @@ const Home = () => {
     navigate("/login");
   };
 
- const addRoom = () => {
-    const newRoom = `Room ${rooms.length + 1}`;
-    setRooms([...rooms, newRoom]);
-    setActiveRoom(null);
-    setActiveSection(null); // Show devices section
+  const addRoom = async () => {
+    try {
+      // Step 1: Check if there is any new device
+      const isAnyNewResponse = await fetch('https://saviotserver.vercel.app/isAnyNew?homeId=1&username=ammar');
+      const macAddress = await isAnyNewResponse.text(); // Response will be plain text (MAC address or "no new device")
+  
+      if (macAddress.trim() === "no new device") {
+        alert("No new room device detected. Please connect a new RoomController near the gateway.");
+        return; // Stop further execution
+      }
+  
+      // Step 2: Add the new room using the MAC address
+      const addNewRoomResponse = await fetch(`https://saviotserver.vercel.app/addNewRoom?homeId=1&username=ammar&mac=${macAddress.trim()}`);
+      const addNewRoomData = await addNewRoomResponse.json(); // Assuming server sends JSON with roomId
+  
+      const { roomId } = addNewRoomData;
+  
+      if (!roomId) {
+        alert("Failed to add new room. Please try again.");
+        return;
+      }
+  
+      // Step 3: Update local state
+      const newRoom = `Room ${roomId}`; // Or simply roomId if you want
+      setRooms([...rooms, newRoom]);
+      setActiveRoom(null);
+      setActiveSection(null);
+  
+      alert(`New room added successfully: Room ${roomId}`);
+    } catch (error) {
+      console.error("Error adding new room:", error);
+      alert("Something went wrong while adding the new room.");
+    }
   };
-
+  
   // Function to delete a room
   const deleteRoom = (roomToDelete) => {
     setRooms(rooms.filter((room) => room !== roomToDelete));
   };
-
- 
-useEffect(() => {
-  axios.get('http://localhost:3001/rooms')
-    .then(res => setRooms(res.data))
-    .catch(err => console.log(err));
-}, []);
-
-  useEffect(() => {
-    const homeSection = document.getElementById("home");
-    if (homeSection) {
-      homeSection.style.scrollMarginTop = "80px";
-    }
-  }, []);
 
 
   return (
