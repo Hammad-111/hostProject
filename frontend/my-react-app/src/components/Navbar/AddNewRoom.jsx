@@ -5,12 +5,12 @@ import { BiTv } from "react-icons/bi";
 import { CgSmartHomeRefrigerator } from "react-icons/cg";
 import PropTypes from "prop-types";
 
-const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, handleToggle }) => {
+const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom,deleteDevice, handleToggle ,rooms}) => {
 
   
   return (
     <div className="devices-section">
-      <h2 style={{margin: '10px', position: 'absolute',top: '10px'}}>{activeRoom} - Control Your Devices</h2>
+      <h2 style={{margin: '10px', position: 'absolute',top: '10px'}}>{activeRoom.name} - Control Your Devices</h2>
       <div className="devices-container">
         {/* Device Cards */}
         <div className="device-list">
@@ -19,6 +19,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Smart Fan</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart Fan")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "Smart Fan")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -26,7 +27,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Smart Light</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Add</button>
-            <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Remove</button>
+            <button onClick={() => deleteDevice(activeRoom, "Smart Light")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -34,6 +35,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Air Conditioner</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Air Conditioner")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "Air Conditioner")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -41,6 +43,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Security Camera</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Security Camera")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "Security Camera")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -48,13 +51,15 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Smart TV</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart TV")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "Smart TV")}>Remove</button>
           </div>
 
           <div className="device-card">
             <CgSmartHomeRefrigerator className="device" />
             <h3>Refrigerator</h3>
             <p>Turn ON/OFF</p>
-            <button onClick={() => addDeviceToRoom(activeRoom, "Refrigerator")}>Add</button>
+            <button  onClick={() => addDeviceToRoom(activeRoom, "Refrigerator")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "Refrigerator")}>Remove</button>
           </div>
         </div>
 
@@ -62,11 +67,11 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
         <div className="added-devices">
           <h3>Added Devices:</h3>
           <ul>
-            {(roomDevices[activeRoom] || []).map((device, index) => (
-              <li key={index}>
-                {device}
-                <button onClick={() => handleToggle(index)}>
-                  {deviceStatuses[device] === 255 ? "OFF" : "ON"}
+            {(roomDevices[activeRoom] || []).map((deviceObj) => (
+              <li key={deviceObj.id}>
+                {deviceObj.name}
+                <button onClick={() => handleToggle(deviceObj.id ,rooms.id)}>
+                  {deviceStatuses[deviceObj.id] === 255 ? "ON" : "OFF"}
                 </button>
               </li>
             ))}
@@ -82,7 +87,9 @@ Devices.propTypes = {
   roomDevices: PropTypes.object.isRequired, // roomDevices should be an object and is required
   deviceStatuses: PropTypes.object.isRequired, // deviceStatuses should be an object and is required
   addDeviceToRoom: PropTypes.func.isRequired, // addDeviceToRoom should be a function and is required
+  deleteDevice: PropTypes.func.isRequired, // deleteDevice should be a function and is required
   handleToggle: PropTypes.func.isRequired, // handleToggle should be a function and is required
+  rooms: PropTypes.object.isRequired, // rooms should be an array and is required
 };
 
 export default Devices;

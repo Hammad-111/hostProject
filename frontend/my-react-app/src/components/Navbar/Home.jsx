@@ -21,6 +21,9 @@ const Home = () => {
   ]);const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
   const [deviceStatuses, setDeviceStatuses] = useState({}); // State to track device statuses
 
+
+
+  // Function to add a device to a room
   const addDeviceToRoom = async (room, device) => {
     try {
       // Step 1: Update local state by adding the device to the room's array
@@ -36,12 +39,17 @@ const Home = () => {
       const responseData = await addDeviceResponse.json();
   
       if (responseData.status === "successful") {
-        // Get the ID from the server response
-        const deviceId = responseData.id;
+        const deviceId = responseData.id; // Get the device ID from the response
         console.log("Device added successfully with ID:", deviceId);
-        
-        // Optional: You can update the state with the device ID or handle it as required
-        // You can store the device ID in state if needed to track or use it later
+  
+        // Step 3: Update state with the device ID in roomDevices
+        setRoomDevices((prevDevices) => ({
+          ...prevDevices,
+          [room.id]: [
+            ...(prevDevices[room.id] || []),
+            { name: device, id: deviceId },
+          ], // Store the device object with name and ID
+        }));
       } else {
         alert("Failed to add device. Please try again.");
       }
@@ -50,6 +58,46 @@ const Home = () => {
       alert("Something went wrong while adding the device.");
     }
   };
+
+ // Function to delete a device from a room
+  const deleteDevice = async (room, device) => {
+    try {
+      // Find the device ID from the roomDevices state
+      const deviceToDelete = roomDevices[room.id].find(
+        (d) => d.name === device
+      );
+      
+      if (!deviceToDelete) {
+        alert("Device not found.");
+        return;
+      }
+  
+      // Call the server API to remove the device using its ID
+      const removeDeviceResponse = await fetch(
+        `https://saviotserver.vercel.app/removeAppliance?roomId=${room.id}&deviceId=${deviceToDelete.id}&homeId=1&username=ammar`
+      );
+      const responseData = await removeDeviceResponse.json();
+  
+      if (responseData.status === "successful") {
+        console.log(`Device ${device} removed successfully.`);
+  
+        // Step 2: Remove device from local state
+        setRoomDevices((prevDevices) => ({
+          ...prevDevices,
+          [room.id]: prevDevices[room.id].filter(
+            (d) => d.name !== device // Remove device based on name
+          ),
+        }));
+      } else {
+        alert("Failed to remove device. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error removing device:", error);
+      alert("Something went wrong while removing the device.");
+    }
+  };
+  
+
   
   ///Handle API for toggling devices
   // Function to handle toggling device status
@@ -57,10 +105,18 @@ const Home = () => {
   const handleToggle = async (deviceId, roomId) => {
     try {
       const response = await axios.get(
-        `https://saviotserver.vercel.app/toggle?id=${deviceId}&roomId=${roomId}&homeId=1&username=ammar`
+        `https://saviotserver.vercel.app/toggle?id=${deviceId}&roomId=${roomId}&homeId=0&username=ammar`
       );
   
-      const newStatus = response.data.status;
+      const data = response.data;
+  
+      if (data.id === 0 && data.error) {
+        // Jab device allocate nahi hui hogi
+        alert(`Error: ${data.error}`);
+        return;
+      }
+  
+      const newStatus = data.status;
       console.log(`Device ${deviceId} toggled. New status:`, newStatus);
   
       // Update deviceStatuses state
@@ -75,6 +131,7 @@ const Home = () => {
       alert("Failed to toggle device.");
     }
   };
+  
 
   const navigate = useNavigate(); // Initialize navigation
 
@@ -153,7 +210,7 @@ const Home = () => {
       <aside className="sidebar">
         <h2 style={{ color: "green", position: "relative", top: "-50px", right: "10px", fontSize: "33px" }}>SAVIOT</h2>
         <button className="btn btn-secondary" onClick={addRoom} >
-          <MdOutlineAddHome /> Add Rooms 
+          <MdOutlineAddHome/> Add Rooms
         </button>
         <div className="room-container">
            {rooms.map((room) => (
@@ -194,8 +251,10 @@ const Home = () => {
          roomDevices={roomDevices}
          deviceStatuses={deviceStatuses}
          addDeviceToRoom={addDeviceToRoom}
+         deleteDevice={deleteDevice}
          handleToggle={handleToggle}
-       />}
+         rooms={rooms}
+        />}
 
         {activeSection === "limits" && <SetLimits />}
 

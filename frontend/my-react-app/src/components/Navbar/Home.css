@@ -135,8 +135,13 @@
 
 .device-card .device {
   width: 60px;
-  height: 60px;
-  margin-bottom: 15px;
+  height: 40px;
+  margin-bottom: 2px;
+  
+}
+.device-card button {
+  margin-top: 5px;  /* Buttons ke beech space dene ke liye */
+  margin-bottom: -2px;  /* Optionally add space between buttons */
 }
 
 .device-card h3 {
