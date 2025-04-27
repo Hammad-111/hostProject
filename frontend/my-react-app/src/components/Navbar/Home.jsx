@@ -14,17 +14,43 @@ import Statistics from "./Statistics";
 const Home = () => {
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
-  const [rooms, setRooms] = useState([]);
-  const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
+  //const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([
+    { id: 1, name: "Room" }, // temporary hardcoded room
+    { id: 2, name: "Bedroom" },      // you can add more if needed
+  ]);const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
   const [deviceStatuses, setDeviceStatuses] = useState({}); // State to track device statuses
 
-  const addDeviceToRoom = (room, device) => {
-    setRoomDevices((prevDevices) => ({
-      ...prevDevices,
-      [room]: [...(prevDevices[room] || []), device], // Add device to the room's array
-    }));
+  const addDeviceToRoom = async (room, device) => {
+    try {
+      // Step 1: Update local state by adding the device to the room's array
+      setRoomDevices((prevDevices) => ({
+        ...prevDevices,
+        [room.id]: [...(prevDevices[room.id] || []), device], // Add device to the room's array
+      }));
+  
+      // Step 2: Call the server API to add the appliance
+      const addDeviceResponse = await fetch(
+        `https://saviotserver.vercel.app/addAppliance?roomId=${room.id}&homeId=0&username=ammar`
+      );
+      const responseData = await addDeviceResponse.json();
+  
+      if (responseData.status === "successful") {
+        // Get the ID from the server response
+        const deviceId = responseData.id;
+        console.log("Device added successfully with ID:", deviceId);
+        
+        // Optional: You can update the state with the device ID or handle it as required
+        // You can store the device ID in state if needed to track or use it later
+      } else {
+        alert("Failed to add device. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding device:", error);
+      alert("Something went wrong while adding the device.");
+    }
   };
-
+  
   ///Handle API for toggling devices
   // Function to handle toggling device status
   
@@ -84,7 +110,7 @@ const Home = () => {
       }
   
       // Step 3: Update local state
-      const newRoom = `Room ${roomId}`; // Or simply roomId if you want
+      const newRoom = { id: roomId, name: `Room ${roomId}` };
       setRooms([...rooms, newRoom]);
       setActiveRoom(null);
       setActiveSection(null);
@@ -97,36 +123,56 @@ const Home = () => {
   };
   
   // Function to delete a room
-  const deleteRoom = (roomToDelete) => {
-    setRooms(rooms.filter((room) => room !== roomToDelete));
+  const deleteRoom = async (roomId) => {
+    try {
+      const response = await fetch(`https://saviotserver.vercel.app/removeRoom?roomId=${roomId}&homeId=1&username=ammar`);
+      const data = await response.json();
+  
+      if (data.status === "success") {
+        // Successfully deleted from server, now update frontend
+        setRooms(rooms.filter((room) => room.id !== roomId));
+        alert(`Room ${roomId} deleted successfully.`);
+      } else if (data.error) {
+        // Server sent an error
+        alert(`Failed to delete room: ${data.error}`);
+      } else {
+        // Unexpected response
+        alert("Unexpected response from server.");
+      }
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      alert("Something went wrong while deleting the room.");
+    }
   };
+  
 
 
   return (
     <div className="home-layout">
+      
       <aside className="sidebar">
         <h2 style={{ color: "green", position: "relative", top: "-50px", right: "10px", fontSize: "33px" }}>SAVIOT</h2>
-        <button className="btn btn-secondary" onClick={addRoom}>
+        <button className="btn btn-secondary" onClick={addRoom} >
           <MdOutlineAddHome /> Add Rooms 
         </button>
         <div className="room-container">
-          {rooms.map((room, index) => (
-            <div key={index} className="room-item">
-              <button
-                className="room-btn" 
-                onClick={() => {
-                  setActiveRoom(room);
-                  setActiveSection("devices");
-                }}
-              >
-                <MdMeetingRoom /> {room}
-              </button>
-              <button onClick={() => deleteRoom(room)}>
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
+           {rooms.map((room) => (
+             <div key={room.id} className="room-item">
+               <button
+                 className="room-btn"
+                 onClick={() => {
+                   setActiveRoom(room);
+                   setActiveSection("devices");
+                 }}
+               >
+                 <MdMeetingRoom /> {room.name}
+               </button>
+               <button onClick={() => deleteRoom(room.id)}>
+                 Delete
+               </button>
+             </div>
+           ))}
+         </div>
         <button className="btn btn-secondary" onClick={() => setActiveSection("limits")}>
           <TbSunElectricity /> Set Limits
         </button>

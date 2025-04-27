@@ -6,6 +6,8 @@ import { CgSmartHomeRefrigerator } from "react-icons/cg";
 import PropTypes from "prop-types";
 
 const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, handleToggle }) => {
+
+  
   return (
     <div className="devices-section">
       <h2 style={{margin: '10px', position: 'absolute',top: '10px'}}>{activeRoom} - Control Your Devices</h2>
@@ -24,6 +26,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
             <h3>Smart Light</h3>
             <p>Turn ON/OFF</p>
             <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Add</button>
+            <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -75,7 +78,7 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom, han
 };
 
 Devices.propTypes = {
-  activeRoom: PropTypes.string.isRequired, // activeRoom should be a string and is required
+  activeRoom: PropTypes.object.isRequired, // activeRoom should be a string and is required
   roomDevices: PropTypes.object.isRequired, // roomDevices should be an object and is required
   deviceStatuses: PropTypes.object.isRequired, // deviceStatuses should be an object and is required
   addDeviceToRoom: PropTypes.func.isRequired, // addDeviceToRoom should be a function and is required
