@@ -5,7 +5,7 @@ import { BiTv } from "react-icons/bi";
 import { CgSmartHomeRefrigerator } from "react-icons/cg";
 import PropTypes from "prop-types";
 
-const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom,deleteDevice, handleToggle ,rooms}) => {
+const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom,deleteDevice, handleToggle }) => {
 
   
   return (
@@ -18,16 +18,16 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom,dele
             <PiFanBold className="device" />
             <h3>Smart Fan</h3>
             <p>Turn ON/OFF</p>
-            <button onClick={() => addDeviceToRoom(activeRoom, "Smart Fan")}>Add</button>
-            <button onClick={() => deleteDevice(activeRoom, "Smart Fan")}>Remove</button>
+            <button onClick={() => addDeviceToRoom(activeRoom, "fan")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom, "fan")}>Remove</button>
           </div>
 
           <div className="device-card">
             <FaRegLightbulb className="device" />
             <h3>Smart Light</h3>
             <p>Turn ON/OFF</p>
-            <button onClick={() => addDeviceToRoom(activeRoom, "Smart Light")}>Add</button>
-            <button onClick={() => deleteDevice(activeRoom, "Smart Light")}>Remove</button>
+            <button onClick={() => addDeviceToRoom(activeRoom, "light")}>Add</button>
+            <button onClick={() => deleteDevice(activeRoom ,"light")}>Remove</button>
           </div>
 
           <div className="device-card">
@@ -67,10 +67,10 @@ const Devices = ({ activeRoom, roomDevices, deviceStatuses, addDeviceToRoom,dele
         <div className="added-devices">
           <h3>Added Devices:</h3>
           <ul>
-            {(roomDevices[activeRoom] || []).map((deviceObj) => (
+            {(roomDevices[activeRoom.id] || []).map((deviceObj) => (
               <li key={deviceObj.id}>
                 {deviceObj.name}
-                <button onClick={() => handleToggle(deviceObj.id ,rooms.id)}>
+                <button onClick={() => handleToggle(deviceObj.id ,activeRoom.id)}>
                   {deviceStatuses[deviceObj.id] === 255 ? "ON" : "OFF"}
                 </button>
               </li>

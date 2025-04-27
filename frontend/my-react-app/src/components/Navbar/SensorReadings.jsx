@@ -10,7 +10,7 @@ import "./Home.css";
     useEffect(() => {
         const interval = setInterval(async () => {
           try {
-            const res = await axios.get("https://saviotserver.vercel.app/cRead?id=0&roomId=2&homeId=1&username=ammar");
+            const res = await axios.get("https://saviotserver.vercel.app/cRead?id=0&roomId=2&homeId=0&username=ammar");
     
             if (res.data.error) {
               console.error("Sensor Error:", res.data.error);

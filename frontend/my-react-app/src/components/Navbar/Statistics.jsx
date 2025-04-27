@@ -8,9 +8,6 @@ const Statistics = () => {
         { month: "Feb", usage: 280 },
         { month: "Mar", usage: 320 },
         { month: "Apr", usage: 250 },
-        { month: "May", usage: 200 },
-        { month: "Jun", usage: 150 },
-        { month: "Jul", usage: 100 },
       ];
 return (
 <div className="statistics-section">

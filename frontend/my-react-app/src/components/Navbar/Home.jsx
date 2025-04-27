@@ -11,17 +11,19 @@ import Devices from "./AddNewRoom";
 import SetLimits from "./Limits";
 import SensorReadings from "./SensorReadings";
 import Statistics from "./Statistics"; 
+
+
 const Home = () => {
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
-  //const [rooms, setRooms] = useState([]);
-  const [rooms, setRooms] = useState([
+  const [rooms, setRooms] = useState([]);
+ /* const [rooms, setRooms] = useState([
     { id: 1, name: "Room" }, // temporary hardcoded room
     { id: 2, name: "Bedroom" },      // you can add more if needed
-  ]);const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
+  ]);*/
+  const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
   const [deviceStatuses, setDeviceStatuses] = useState({}); // State to track device statuses
-
-
+  
 
   // Function to add a device to a room
   const addDeviceToRoom = async (room, device) => {
@@ -31,10 +33,12 @@ const Home = () => {
         ...prevDevices,
         [room.id]: [...(prevDevices[room.id] || []), device], // Add device to the room's array
       }));
-  
+      console.log("Device added to local state:", device);
+      console.log("Device added to local state:", room.id);
+      
       // Step 2: Call the server API to add the appliance
       const addDeviceResponse = await fetch(
-        `https://saviotserver.vercel.app/addAppliance?roomId=${room.id}&homeId=0&username=ammar`
+        `https://saviotserver.vercel.app/addAppliance?dPin=23&sPin=21&type=${device}&title=mainFan&roomId=${room.id}&homeId=0&username=ammar`
       );
       const responseData = await addDeviceResponse.json();
   
@@ -71,10 +75,11 @@ const Home = () => {
         alert("Device not found.");
         return;
       }
+      const deviceId = deviceToDelete.id;
   
       // Call the server API to remove the device using its ID
       const removeDeviceResponse = await fetch(
-        `https://saviotserver.vercel.app/removeAppliance?roomId=${room.id}&deviceId=${deviceToDelete.id}&homeId=1&username=ammar`
+        `https://saviotserver.vercel.app/removeAppliance?id=${deviceId}&roomId=${room.id}&homeId=0&username=ammar`
       );
       const responseData = await removeDeviceResponse.json();
   
@@ -147,42 +152,47 @@ const Home = () => {
   const addRoom = async () => {
     try {
       // Step 1: Check if there is any new device
-      const isAnyNewResponse = await fetch('https://saviotserver.vercel.app/isAnyNew?homeId=1&username=ammar');
-      const macAddress = await isAnyNewResponse.text(); // Response will be plain text (MAC address or "no new device")
+      const isAnyNewResponse = await fetch('https://saviotserver.vercel.app/isAnyNew?homeId=0&username=ammar');
+      const isAnyNewData = await isAnyNewResponse.json();  // Assuming response is JSON
   
-      if (macAddress.trim() === "no new device") {
+      // Extract MAC Address from the response
+      const macAddress = isAnyNewData?.newDevice;
+  
+      if (!macAddress || macAddress.trim() === "no new device") {
         alert("No new room device detected. Please connect a new RoomController near the gateway.");
         return; // Stop further execution
       }
   
       // Step 2: Add the new room using the MAC address
-      const addNewRoomResponse = await fetch(`https://saviotserver.vercel.app/addNewRoom?homeId=1&username=ammar&mac=${macAddress.trim()}`);
+      const addNewRoomResponse = await fetch(`https://saviotserver.vercel.app/registerNewRoom?homeId=0&username=ammar&mac=${macAddress.trim()}`);
       const addNewRoomData = await addNewRoomResponse.json(); // Assuming server sends JSON with roomId
   
-      const { roomId } = addNewRoomData;
+      
+      const { id } = addNewRoomData;
   
-      if (!roomId) {
+      if (!id) {
         alert("Failed to add new room. Please try again.");
         return;
       }
   
       // Step 3: Update local state
-      const newRoom = { id: roomId, name: `Room ${roomId}` };
+      const newRoom = { id: id, name: `Room ${id}` };
       setRooms([...rooms, newRoom]);
       setActiveRoom(null);
       setActiveSection(null);
   
-      alert(`New room added successfully: Room ${roomId}`);
+      alert(`New room added successfully: Room ${id}`);
     } catch (error) {
       console.error("Error adding new room:", error);
       alert("Something went wrong while adding the new room.");
     }
   };
   
+  
   // Function to delete a room
   const deleteRoom = async (roomId) => {
     try {
-      const response = await fetch(`https://saviotserver.vercel.app/removeRoom?roomId=${roomId}&homeId=1&username=ammar`);
+      const response = await fetch('https://saviotserver.vercel.app/removeRoom?roomId=${roomId}&homeId=1&username=ammar');
       const data = await response.json();
   
       if (data.status === "success") {
@@ -206,7 +216,6 @@ const Home = () => {
 
   return (
     <div className="home-layout">
-      
       <aside className="sidebar">
         <h2 style={{ color: "green", position: "relative", top: "-50px", right: "10px", fontSize: "33px" }}>SAVIOT</h2>
         <button className="btn btn-secondary" onClick={addRoom} >
