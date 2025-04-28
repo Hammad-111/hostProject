@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { MdOutlineAddHome, MdMeetingRoom } from "react-icons/md";
 import { CiLogin } from "react-icons/ci";
@@ -15,15 +15,13 @@ import Statistics from "./Statistics";
 
 const Home = () => {
   const [activeRoom, setActiveRoom] = useState(null);
-  const [activeSection, setActiveSection] = useState(null);
+  const [activeSection, setActiveSection] = useState("datas"); // Default section to show
   const [rooms, setRooms] = useState([]);
- /* const [rooms, setRooms] = useState([
-    { id: 1, name: "Room" }, // temporary hardcoded room
-    { id: 2, name: "Bedroom" },      // you can add more if needed
-  ]);*/
   const [roomDevices, setRoomDevices] = useState({}); // State to track devices for each room
   const [deviceStatuses, setDeviceStatuses] = useState({}); // State to track device statuses
-  
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   // Function to add a device to a room
   const addDeviceToRoom = async (room, device) => {
@@ -192,7 +190,7 @@ const Home = () => {
   // Function to delete a room
   const deleteRoom = async (roomId) => {
     try {
-      const response = await fetch('https://saviotserver.vercel.app/removeRoom?roomId=${roomId}&homeId=1&username=ammar');
+      const response = await fetch('https://saviotserver.vercel.app/removeRoom?roomId=2&homeId=0&username=ammar');
       const data = await response.json();
   
       if (data.status === "success") {
@@ -212,7 +210,30 @@ const Home = () => {
     }
   };
   
+  useEffect(() => {
+    fetch('https://saviotserver.vercel.app/sendAllData?homeId=0&username=ammar')
+      .then(response => response.json())
+      .then(fetchedData => {
+        console.log('Fetched data:', fetchedData);
 
+        // Filter out empty objects
+        const validData = fetchedData.filter(item => item && item.appliances && item.appliances.length > 0);
+        setData(validData);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+  const handleButtonClick = (applianceId) => {
+    handleToggle(applianceId ,2);
+    window.location.reload(); // Reload the page after toggling
+  };
 
   return (
     <div className="home-layout">
@@ -252,7 +273,42 @@ const Home = () => {
           <CiLogin /> Logout
         </button>
       </aside>
-
+       {  activeSection === "datas" &&    
+       <div className="min-h-screen">
+       <div className="container">
+         <h1>Appliance Dashboard</h1>
+ 
+         <div className="grid">
+           {data.map((home, homeIndex) => (
+             <div key={homeIndex} className="home-card">
+               <h2>Home {homeIndex + 1}</h2>
+ 
+               <div className="space-y-4">
+                 {/* Check if appliances is defined and is an array */}
+                 {home.appliances && Array.isArray(home.appliances) ? (
+                   home.appliances.map((appliance) => (
+                     <div key={appliance.id} className="appliance-card">
+                       <h3>Appliance ID: {appliance.id}</h3>
+                       <p><strong>Status:</strong> {appliance.status === 255 ? 'On' : 'Off'}</p>
+                       <p><strong>Title:</strong> {appliance.title || 'No title available'}</p>
+                       <button
+                         className="toggle-btn"
+                         onClick={() => handleButtonClick(appliance.id) }
+                         
+                       >
+                          {appliance.status === 255 ? 'ON' : 'OFF'}
+                       </button>
+                     </div>
+                   ))
+                 ) : (
+                   <div className="no-data">No appliances data available for this home</div>
+                 )}
+               </div>
+             </div>
+           ))}
+         </div>
+       </div>
+     </div>}
       {/* Main Content */}
       <section id="home" className="home-container">
         {activeSection === "devices" && activeRoom && <Devices
