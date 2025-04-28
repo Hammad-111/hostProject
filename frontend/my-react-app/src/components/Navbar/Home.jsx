@@ -230,6 +230,12 @@ const Home = () => {
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
+  
+  const handleButtonClickDelete = (applianceId) => {
+    deleteRoom(applianceId);
+    window.location.reload(); // Reload the page after toggling
+  };
+
   const handleButtonClick = (applianceId) => {
     handleToggle(applianceId ,2);
     window.location.reload(); // Reload the page after toggling
@@ -281,7 +287,9 @@ const Home = () => {
          <div className="grid">
            {data.map((home, homeIndex) => (
              <div key={homeIndex} className="home-card">
-               <h2>Home {homeIndex + 1}</h2>
+               <h2>Home {homeIndex + 1}
+                <button onClick={() => handleButtonClickDelete(2)}>Delete</button>
+               </h2>
  
                <div className="space-y-4">
                  {/* Check if appliances is defined and is an array */}

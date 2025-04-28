@@ -472,7 +472,7 @@ input::placeholder {
 }
 
 .min-h-screen {
-  min-height: 100vh;
+  min-height: 250vh;
 
 }
 
@@ -483,6 +483,8 @@ h1 {
   text-align: center;
   margin-bottom: 2rem;
 }
+
+
 
 /* Home card styling */
 .home-card {
