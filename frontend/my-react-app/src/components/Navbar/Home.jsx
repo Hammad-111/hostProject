@@ -21,7 +21,8 @@ const Home = () => {
   const [deviceStatuses, setDeviceStatuses] = useState({}); // State to track device statuses
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // Function to add a device to a room
   const addDeviceToRoom = async (room, device) => {
@@ -42,8 +43,9 @@ const Home = () => {
   
       if (responseData.status === "successful") {
         const deviceId = responseData.id; // Get the device ID from the response
-        console.log("Device added successfully with ID:", deviceId);
-  
+        setToastMessage("Device added successfully!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
         // Step 3: Update state with the device ID in roomDevices
         setRoomDevices((prevDevices) => ({
           ...prevDevices,
@@ -53,11 +55,16 @@ const Home = () => {
           ], // Store the device object with name and ID
         }));
       } else {
-        alert("Failed to add device. Please try again.");
+        setToastMessage("Failed to add device. Please try again");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+
       }
     } catch (error) {
       console.error("Error adding device:", error);
-      alert("Something went wrong while adding the device.");
+      setToastMessage("Something went wrong while adding the device");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
 
@@ -70,7 +77,9 @@ const Home = () => {
       );
       
       if (!deviceToDelete) {
-        alert("Device not found.");
+        setToastMessage("Device not found");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
         return;
       }
       const deviceId = deviceToDelete.id;
@@ -92,11 +101,15 @@ const Home = () => {
           ),
         }));
       } else {
-        alert("Failed to remove device. Please try again.");
+        setToastMessage("Failed to remove device. Please try again.");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
       }
     } catch (error) {
-      console.error("Error removing device:", error);
-      alert("Something went wrong while removing the device.");
+      console.error(":", error);
+      setToastMessage("Something went wrong while removing the device");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
   
@@ -144,7 +157,9 @@ const Home = () => {
     setActiveRoom(null);
     setActiveSection(null);
     // Redirect to login page
+    
     navigate("/login");
+
   };
 
   const addRoom = async () => {
@@ -169,7 +184,9 @@ const Home = () => {
       const { id } = addNewRoomData;
   
       if (!id) {
-        alert("Failed to add new room. Please try again.");
+        setToastMessage("Failed to add new room. Please try again.");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
         return;
       }
   
@@ -179,10 +196,14 @@ const Home = () => {
       setActiveRoom(null);
       setActiveSection(null);
   
-      alert(`New room added successfully: Room ${id}`);
+      setToastMessage("New room added successfully");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     } catch (error) {
       console.error("Error adding new room:", error);
-      alert("Something went wrong while adding the new room.");
+      setToastMessage("Something went wrong while adding the new room.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
   
@@ -196,17 +217,26 @@ const Home = () => {
       if (data.status === "success") {
         // Successfully deleted from server, now update frontend
         setRooms(rooms.filter((room) => room.id !== roomId));
-        alert(`Room ${roomId} deleted successfully.`);
+        setToastMessage("Room deleted successfully.");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
       } else if (data.error) {
         // Server sent an error
         alert(`Failed to delete room: ${data.error}`);
+        setToastMessage("Room deleted successfully");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
       } else {
         // Unexpected response
-        alert("Unexpected response from server.");
+        setToastMessage("Unexpected response from server");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
       }
     } catch (error) {
       console.error("Error deleting room:", error);
-      alert("Something went wrong while deleting the room.");
+      setToastMessage("Something went wrong while deleting the room");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
   
@@ -248,6 +278,11 @@ const Home = () => {
         <button className="btn btn-secondary" onClick={addRoom} >
           <MdOutlineAddHome/> Add Rooms
         </button>
+          {showToast && (
+             <div className="glass-toast">
+             {toastMessage}
+             </div>
+          )}  
         <div className="room-container">
            {rooms.map((room) => (
              <div key={room.id} className="room-item">

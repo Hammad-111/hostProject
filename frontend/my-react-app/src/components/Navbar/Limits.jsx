@@ -3,8 +3,6 @@ import { TbSunElectricity } from "react-icons/tb";
 
     const Limits =()=>{
       const [monthlyLimit, setMonthlyLimit] = useState("");
-      const [dailyLimit, setDailyLimit] = useState("");
-      const [peakHourLimit, setPeakHourLimit] = useState("");
       const [autoCutoff, setAutoCutoff] = useState(false);
   
       const [showToast, setShowToast] = useState(false);
@@ -18,8 +16,6 @@ import { TbSunElectricity } from "react-icons/tb";
       
       const handleReset = () => {
         setMonthlyLimit("");
-        setDailyLimit("");
-        setPeakHourLimit("");
         setAutoCutoff(false);
         setToastMessage("Limits reset successfully!");
         setShowToast(true);
@@ -44,21 +40,6 @@ return (
             />
       
             {/* Daily Limit */}
-            <label>Daily Limit (kWh):</label>
-            <input
-              type="number"
-              placeholder="Enter daily limit"
-              value={dailyLimit}
-              onChange={(e) => setDailyLimit(e.target.value)}
-            />
-           {/* Peak Hours Limit */}
-           <label>Peak Hours Limit (kWh):</label>
-                 <input
-                   type="number"
-                   placeholder="Enter peak hour limit"
-                   value={peakHourLimit}
-                   onChange={(e) => setPeakHourLimit(e.target.value)}
-                 />
            
                  {/* Auto Cutoff Toggle */}
                  <label>
