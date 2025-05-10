@@ -1,27 +1,31 @@
 import { useState } from "react";
 import { TbSunElectricity } from "react-icons/tb";
-
+const homeId = localStorage.getItem("homeId");
     const Limits =()=>{
       const [monthlyLimit, setMonthlyLimit] = useState("");
-      const [autoCutoff, setAutoCutoff] = useState(false);
-  
       const [showToast, setShowToast] = useState(false);
       const [toastMessage, setToastMessage] = useState("");
       
-      const handleSave = () => {
-        setToastMessage("Limits saved successfully!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
-      };
-      
-      const handleReset = () => {
-        setMonthlyLimit("");
-        setAutoCutoff(false);
-        setToastMessage("Limits reset successfully!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
-      };
-      
+          const handleSave = async () => {  
+            
+               try {
+                 const response = await fetch(`https://saviotserver.vercel.app/setLimit?limit=${monthlyLimit}&homeId=${homeId}&username=ammar`);
+                 const data = await response.json();
+             
+                 if (data.status === "success") {
+                   setToastMessage("Limits saved successfully!");
+                 } else {
+                   setToastMessage("Failed to save limit.");
+                 }
+               } catch (error) {
+                 setToastMessage("Error connecting to server.");
+                 console.error("API error:", error);
+               }
+             
+               setShowToast(true);
+               setTimeout(() => setShowToast(false), 3000);
+     };
+     
 return (
      <div className="set-limits-section">
             <TbSunElectricity className="limit-icon" />
@@ -38,25 +42,11 @@ return (
               value={monthlyLimit}
               onChange={(e) => setMonthlyLimit(e.target.value)}
             />
-      
-            {/* Daily Limit */}
-           
-                 {/* Auto Cutoff Toggle */}
-                 <label>
-                   <input
-                     type="checkbox"
-                     checked={autoCutoff}
-                     onChange={(e) => setAutoCutoff(e.target.checked)}
-                   />
-                   Enable Auto Cutoff When Limit Exceeds
-                 </label>
+    
                 {/* Save & Reset Buttons */}
                <div className="button-group">
                  <button className="save-btn" onClick={handleSave}>
                    Save Limit
-                 </button>
-                 <button className="reset-btn" onClick={handleReset}>
-                   Reset
                  </button>
                </div>  
                {showToast && (

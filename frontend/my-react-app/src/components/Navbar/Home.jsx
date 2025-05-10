@@ -172,7 +172,9 @@ const Home = () => {
       const macAddress = isAnyNewData?.newDevice;
   
       if (!macAddress || macAddress.trim() === "no new device") {
-        alert("No new room device detected. Please connect a new RoomController near the gateway.");
+        setToastMessage("No new room device detected. Please connect a new RoomController near the gateway");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
         return; // Stop further execution
       }
   
@@ -250,6 +252,10 @@ const Home = () => {
         const validData = fetchedData.filter(item => item && item.appliances && item.appliances.length > 0);
         setData(validData);
         setLoading(false);
+        // ✅ Store homeId (assuming first item has homeId)
+         if (validData.length > 0 && validData[0].homeId) {
+          localStorage.setItem("homeId", validData[0].homeId);
+        }
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -279,7 +285,7 @@ const Home = () => {
           <MdOutlineAddHome/> Add Rooms
         </button>
           {showToast && (
-             <div className="glass-toast">
+             <div className="glass-toast1">
              {toastMessage}
              </div>
           )}  

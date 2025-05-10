@@ -314,7 +314,7 @@ input::placeholder {
 /* Add this in your CSS file or in a <style jsx> block */
 .glass-toast {
   position: fixed;
-  top: 20px;
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
   padding: 20px 32px;
@@ -327,9 +327,25 @@ input::placeholder {
   font-weight: 600;
   font-size: 1.1rem;
   z-index: 1000;
-  animation: slideDown 0.5s ease forwards;
+  animation: slideDown 0.3s ease forwards;
 }
-
+.glass-toast1{
+   position: fixed;
+  top: 20px;
+  left: 55%;
+  transform: translateX(-50%);
+  padding: 20px 32px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  font-size: 1.1rem;
+  z-index: 1000;
+  animation: slideDown 0.3s ease forwards;
+}
 @keyframes slideDown {
   0% {
     opacity: 0;
